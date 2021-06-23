@@ -1,40 +1,19 @@
 [![nlpsandbox.io](https://nlpsandbox.github.io/nlpsandbox-themes/banner/Banner@3x.png)](https://nlpsandbox.io)
 
-# Generating the i2b2 PHI dataset for the NLP Sandbox
+# NLP Sandbox Notebooks
 
-[![GitHub Release](https://img.shields.io/github/release/nlpsandbox/i2b2-phi-dataset.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&logo=github)](https://github.com/nlpsandbox/i2b2-phi-dataset/releases)
-[![GitHub CI](https://img.shields.io/github/workflow/status/nlpsandbox/i2b2-phi-dataset/CI.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&logo=github)](https://github.com/nlpsandbox/i2b2-phi-dataset)
-[![GitHub License](https://img.shields.io/github/license/nlpsandbox/i2b2-phi-dataset.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&logo=github)](https://github.com/nlpsandbox/i2b2-phi-dataset/blob/main/LICENSE)
+[![GitHub Release](https://img.shields.io/github/release/nlpsandbox/nlpsandbox-analysis.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&logo=github)](https://github.com/nlpsandbox/nlpsandbox-analysis/releases)
+[![GitHub CI](https://img.shields.io/github/workflow/status/nlpsandbox/nlpsandbox-analysis/CI.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&logo=github)](https://github.com/nlpsandbox/nlpsandbox-analysis)
+[![GitHub License](https://img.shields.io/github/license/nlpsandbox/nlpsandbox-analysis.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&logo=github)](https://github.com/nlpsandbox/nlpsandbox-analysis/blob/main/LICENSE)
 
 ## Introduction
 
-[NLPSandbox.io] is an open platform for benchmarking modular natural language
-processing (NLP) tools on both public and private datasets. Academics, students,
-and industry professionals are invited to browse the available tasks and
-participate by developing and submitting an NLP Sandbox tool.
-
-One of the datasets used to benchmark the performance of PHI annotators on
-[NLPSandbox.io] is the [2014 i2b2 NLP De-identification Challenge Dataset]. This
-dataset is publicly available and can be used by NLP developers to locally test
-their tools before submitting them to the NLP Sandbox. Once submitted, PHI
-annotators will be evaluated on the 2014 i2b2 dataset as well as on private
-datasets provided by different partner organizations, including MCW, Mayo Clinic
-and UW.
-
-In order to use the i2b2 dataset to develop your NLP Sandbox PHI annotator, its
-annotations must first be mapped to the annotations defined by the [NLP Sandbox
-schemas]. Because one must agree to not redistribute the i2b2 dataset prior to
-downloading it, even in a modified form, we provide a dockerized R notebook that
-you can use to generate files that you can use to map the dataset. The files
-generated at the end of the notebook can then be pushed to a local or remote
-instance of the [NLP Sandbox Data Node] using the [NLP Sandbox CLI].
+TBA
 
 ## Specification
 
 - NLP Sandbox schemas version: 1.2.0
-- NLP Sandbox dataset
-  - Name: `i2b2-phi-dataset`
-  - Version: 1.2.1
+- NLP Sandbox notebooks version: TBA
 
 ## Requirements
 
@@ -119,7 +98,7 @@ running and hard to roll back.
 
 [NLPSandbox.io]: https://nlpsandbox.io
 [semantic versioning]: https://semver.org/
-[Apache License 2.0]: https://github.com/nlpsandbox/i2b2-phi-dataset/blob/main/LICENSE
+[Apache License 2.0]: https://github.com/nlpsandbox/nlpsandbox-analysis/blob/main/LICENSE
 [renv.lock]: renv.lock
 [conda/i2b2-phi-dataset/environment.yml]: conda/i2b2-phi-dataset/environment.yml
 [CI/CD workflow]: .github/workflows/ci.yml
