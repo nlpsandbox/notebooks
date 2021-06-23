@@ -2,15 +2,15 @@ version: "3.8"
 
 services:
   rstudio:
-    image: docker.synapse.org/syn22277123/i2b2-phi-dataset:1.2.1
+    image: nlpsandbox/nlpsandbox-analysis:edge
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: i2b2-phi-dataset
+    container_name: nlpsandbox-analysis
     command: rstudio
     env_file:
       - .env
     volumes:
-      - .:/home/rstudio/i2b2-phi-dataset:rw
+      - .:/home/rstudio/nlpsandbox:rw
     ports:
       - "${HOST_PORT}:8787"

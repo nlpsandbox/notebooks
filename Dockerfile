@@ -1,18 +1,18 @@
 FROM sagebionetworks/rstudio:4.1.0-efb64703
 
 LABEL maintainer="team@nlpsandbox.io"
-LABEL description="Generation of the i2b2 PHI dataset for the NLP Sandbox"
+LABEL description="Example notebooks for interacting with the NLP Sandbox API"
 
 # Create conda environments
 COPY conda /tmp/conda
 RUN conda init bash \
-    && conda env create -f /tmp/conda/i2b2-phi-dataset/environment.yml \
+    && conda env create -f /tmp/conda/nlpsandbox/environment.yml \
     && rm -fr /tmp/conda \
     # Fix libssl issue that affects conda env used with reticulate
     && cp /usr/lib/x86_64-linux-gnu/libssl.so.1.1 \
-        /opt/miniconda/envs/i2b2-phi-dataset/lib/libssl.so.1.1 \
+        /opt/miniconda/envs/nlpsandbox/lib/libssl.so.1.1 \
     && conda activate base || true \
-    && echo "conda activate i2b2-phi-dataset" >> ~/.bashrc
+    && echo "conda activate nlpsandbox" >> ~/.bashrc
 
 # Install R dependencies
 COPY renv.lock /tmp/renv.lock

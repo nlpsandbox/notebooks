@@ -1,4 +1,4 @@
-name: i2b2-phi-dataset
+name: nlpsandbox
 channels:
   - defaults
 dependencies:
