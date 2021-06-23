@@ -1,0 +1,8 @@
+name: i2b2-phi-dataset
+channels:
+  - defaults
+dependencies:
+  - python=3.9.4
+  - pip=21.0.1
+  - pip:
+    - -r file:requirements.txt
