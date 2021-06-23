@@ -9,9 +9,9 @@ on:
   pull_request:
 
 env:
-  docker_repository: docker.synapse.org/syn22277123/i2b2-phi-dataset
+  docker_repository: nlpsandbox/nlpsandbox-analysis
   # github.event.repository.clone_url not available for on: schedule
-  clone_url: https://github.com/nlpsandbox/i2b2-phi-dataset.git
+  clone_url: https://github.com/nlpsandbox/nlpsandbox-analysis.git
   # github.event.repository.default_branch not available for on: schedule
   default_branch: main
 
@@ -80,7 +80,7 @@ jobs:
         args: Dockerfile
     - name: Check that packages in requirements.txt files are in asc order
       run: |
-        sort -f --check conda/i2b2-phi-dataset/requirements.txt
+        sort -f --check conda/nlpsandbox/requirements.txt
 
   test:
     needs: [lint]
