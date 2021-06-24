@@ -12,5 +12,12 @@ services:
       - .env
     volumes:
       - .:/home/rstudio/nlpsandbox:rw
+    networks:
+      - data-node
     ports:
       - "${HOST_PORT}:8787"
+
+networks:
+  data-node:
+    external: true
+    name: data-node_default
