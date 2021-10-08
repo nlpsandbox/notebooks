@@ -10,23 +10,33 @@
 
 ## Introduction
 
-TBA
+This repository provides Rmd notebooks that enable you to use R and Python
+together to interact with the NLP Sandbox ecosystem. For example, use example
+notebooks included with this repository to perform analysis using data stored in
+a local or remote instance of the NLP Sandbox Data Node. See the Section
+[Notebooks](#Notebooks) below for the list of notebooks included with this
+repository.
 
-## Specification
-
-- NLP Sandbox notebooks version: 0.1.0
-- NLP Sandbox schemas version: 1.2.0
+The Docker image [nlpsandbox/notebooks] offered by this project is based on the
+image [sagebionetworks/rstudio].
 
 ## Requirements
 
 - [Docker Engine] >=19.03.0
 - [Synapse.org] user account
 
+## Specification
+
+- Notebooks version: 0.1.0
+- NLP Sandbox schemas version: 1.2.0
+
 ## Notebooks
 
-Rmd Notebook | Description | HTML Notebook
--------- | ----------- | -------------
-[generate-dataset.Rmd](notebooks/generate-dataset.Rmd)         | Generation of the i2b2 PHI dataset for the NLP Sandbox.                                | [![HTML notebook](https://img.shields.io/badge/latest-blue.svg?color=1283c3&labelColor=555555&logoColor=ffffff&style=for-the-badge&logo=github)](https://nlpsandbox.github.io/i2b2-phi-dataset/latest/notebooks/generate-dataset.html)
+Rmd Notebook | Description
+-------- | -----------
+[notebook.Rmd](notebooks/notebook.Rmd)         | Default RStudio notebook.
+[r-and-python.Rmd](notebooks/r-and-python.Rmd) | Shows how to use R and Python together.
+[data-node.Rmd](notebooks/data-node.Rmd)       | Interact with an NLP Sandbox Data Node instance.
 
 > Important: Please make sure when you write your own notebooks that no
 > sensitive information ends up being publicly available. Please check with the
@@ -114,3 +124,5 @@ running and hard to roll back.
 [NLP Sandbox CLI]: https://github.com/nlpsandbox/nlpsandbox-client
 [GitHub Secrets]: https://docs.github.com/en/actions/reference/encrypted-secrets
 [personal access token (PAT)]: https://help.synapse.org/docs/Managing-Your-Account.2055405596.html
+[sagebionetworks/rstudio]: https://github.com/Sage-Bionetworks/docker-rstudio
+[nlpsandbox/notebooks]: https://hub.docker.com/repository/docker/nlpsandbox/notebooks
