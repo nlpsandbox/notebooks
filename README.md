@@ -45,13 +45,20 @@ Rmd Notebook | Description
 
 ## Usage
 
-1. Create and edit the configuration file.
+Create and edit the configuration file.
 
-       cp .env.example .env
+    cp .env.example .env
 
-2. Start RStudio. Add the option `-d` or `--detach` to run in the background.
+Start RStudio using the latest version of the Docker image
+[nlpsandbox/notebooks]:
 
-       docker compose up
+    docker compose pull
+    docker compose up
+
+If you want to build and run the docker image, for example after having
+customized the `Dockerfile`:
+
+    docker compose up --build
 
 RStudio is now available at http://localhost. On the login page, enter the
 default username (`rstudio`) and the password specified in `.env`.
@@ -59,22 +66,26 @@ default username (`rstudio`) and the password specified in `.env`.
 To stop RStudio, enter `Ctrl+C` followed by `docker compose down`.  If running
 in detached mode, you will only need to enter `docker compose down`.
 
+Tips:
+
+- Add `-d` or `--detach` as in `docker compose up -d` to run in the background.
+- If the command `docker compose` is missing, try `docker-compose`.
+
 ## Configuring the CI/CD workflow
 
 The [CI/CD workflow] of this repository performs the following actions:
 
 - Generate HTML notebooks from R notebook and publishes them to GitHub Pages.
-- Build the Docker image [docker.synapse.org/syn22277123/i2b2-phi-dataset] and
-  push it to Synapse Docker Registry.
+- Build the Docker image [nlpsandbox/notebooks] and push it to Docker Hub.
 
-If you decided to fork this repository, you will need to update the environment
-variables defined at the top of the [CI/CD workflow]. You also need to create
-the following [GitHub Secrets]:
+If you decided to fork this repository or use it as a template, you will need to
+update the environment variables defined at the top of the [CI/CD workflow]. You
+also need to create the following [GitHub Secrets]:
 
-- `RSTUDIO_PASSWORD`: Random password.
-- `SYNAPSE_USERNAME`: Your [Synapse.org] username.
-- `SYNAPSE_TOKEN`: A [personal access token (PAT)] that has the permissions
-  `View`, `Download` and `Modify`.
+- `RSTUDIO_PASSWORD`: Set it to a random value (only used by CI).
+- `DOCKERHUB_USERNAME`: Your Docker Hub username.
+- `DOCKERHUB_TOKEN`: A [personal access token (PAT)] that has the permissions to
+  push the image.
 
 ## Versioning
 
@@ -84,10 +95,10 @@ This repository uses [semantic versioning] to track the releases of this
 project. This repository uses "non-moving" GitHub tags, that is, a tag will
 always point to the same git commit once it has been created.
 
-### GitHub Pages
+### Docker image and GitHub Pages
 
-The artifact published by this repository are HTML notebooks published to GitHub
-Pages and the Docker image [docker.synapse.org/syn22277123/i2b2-phi-dataset].
+The artifact published by this repository are the Docker image
+[nlpsandbox/notebooks] and HTML notebooks published to GitHub Pages.
 
 The table below describes the GH Pages tags available.
 
