@@ -16,7 +16,7 @@ updates:
     open-pull-requests-limit: 0
 
   - package-ecosystem: "pip"
-    directory: "/conda/i2b2-phi-dataset"
+    directory: "/conda/nlpsandbox"
     schedule:
       interval: "monthly"
     target-branch: "main"
