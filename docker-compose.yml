@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   rstudio:
-    image: nlpsandbox/notebooks:edge
+    image: nlpsandbox/notebooks:0.1.0
     build:
       context: .
     container_name: nlpsandbox-notebooks

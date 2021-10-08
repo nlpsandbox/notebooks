@@ -63,6 +63,12 @@ customized the `Dockerfile`:
 RStudio is now available at http://localhost. On the login page, enter the
 default username (`rstudio`) and the password specified in `.env`.
 
+In RStudio, open the RStudio project provided by this repository by clicking on
+the button `Project: (None)` > `Open Project...` on the top-right corner, then
+select the file `nlpsandbox/nlpsandbox.Rproj`. You should now be able to open
+and run the notebook `r-and-python.Rmd`. This will confirm that you can
+successfully use R and Python togehter.
+
 To stop RStudio, enter `Ctrl+C` followed by `docker compose down`.  If running
 in detached mode, you will only need to enter `docker compose down`.
 
