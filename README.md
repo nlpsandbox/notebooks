@@ -91,7 +91,7 @@ also need to create the following [GitHub Secrets]:
 
 - `RSTUDIO_PASSWORD`: "changeme"
 - `DOCKERHUB_USERNAME`: Your Docker Hub username.
-- `DOCKERHUB_TOKEN`: A [personal access token (PAT)] that has the permissions to
+- `DOCKERHUB_TOKEN`: A personal access token (PAT) that has the permissions to
   push the image.
 
 ## Versioning
@@ -141,6 +141,5 @@ running and hard to roll back.
 [NLP Sandbox Data Node]: https://github.com/nlpsandbox/data-node
 [NLP Sandbox CLI]: https://github.com/nlpsandbox/nlpsandbox-client
 [GitHub Secrets]: https://docs.github.com/en/actions/reference/encrypted-secrets
-[personal access token (PAT)]: https://help.synapse.org/docs/Managing-Your-Account.2055405596.html
 [sagebionetworks/rstudio]: https://github.com/Sage-Bionetworks/docker-rstudio
 [nlpsandbox/notebooks]: https://hub.docker.com/repository/docker/nlpsandbox/notebooks
