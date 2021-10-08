@@ -49,13 +49,14 @@ Create and edit the configuration file.
 
     cp .env.example .env
 
-Start RStudio using the latest version of the Docker image
-[nlpsandbox/notebooks]:
+You can either pull the docker image [nlpsandbox/notebooks] or build it using
+the information included in `docker-compose.yml`. To pull the image and start
+RStudio:
 
     docker compose pull
     docker compose up
 
-If you want to build and run the docker image, for example after having
+If you want to build the image and start RStudio, for instance after having
 customized the `Dockerfile`:
 
     docker compose up --build
@@ -88,7 +89,7 @@ If you decided to fork this repository or use it as a template, you will need to
 update the environment variables defined at the top of the [CI/CD workflow]. You
 also need to create the following [GitHub Secrets]:
 
-- `RSTUDIO_PASSWORD`: Set it to a random value (only used by CI).
+- `RSTUDIO_PASSWORD`: "changeme"
 - `DOCKERHUB_USERNAME`: Your Docker Hub username.
 - `DOCKERHUB_TOKEN`: A [personal access token (PAT)] that has the permissions to
   push the image.
