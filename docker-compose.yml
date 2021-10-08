@@ -2,11 +2,10 @@ version: "3.8"
 
 services:
   rstudio:
-    image: nlpsandbox/nlpsandbox-analysis:edge
+    image: nlpsandbox/notebooks:0.1.0
     build:
       context: .
-      dockerfile: Dockerfile
-    container_name: nlpsandbox-analysis
+    container_name: nlpsandbox-notebooks
     command: rstudio
     env_file:
       - .env

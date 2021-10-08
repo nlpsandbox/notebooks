@@ -2,29 +2,41 @@
 
 # NLP Sandbox Notebooks
 
-[![GitHub Release](https://img.shields.io/github/release/nlpsandbox/nlpsandbox-analysis.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&logo=github)](https://github.com/nlpsandbox/nlpsandbox-analysis/releases)
-[![GitHub CI](https://img.shields.io/github/workflow/status/nlpsandbox/nlpsandbox-analysis/CI.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&logo=github)](https://github.com/nlpsandbox/nlpsandbox-analysis)
-[![GitHub License](https://img.shields.io/github/license/nlpsandbox/nlpsandbox-analysis.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&logo=github)](https://github.com/nlpsandbox/nlpsandbox-analysis/blob/main/LICENSE)
+[![GitHub Release](https://img.shields.io/github/release/nlpsandbox/notebooks.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&logo=github)](https://github.com/nlpsandbox/notebooks/releases)
+[![GitHub CI](https://img.shields.io/github/workflow/status/nlpsandbox/notebooks/CI.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&logo=github)](https://github.com/nlpsandbox/notebooks)
+[![GitHub License](https://img.shields.io/github/license/nlpsandbox/notebooks.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&logo=github)](https://github.com/nlpsandbox/notebooks/blob/main/LICENSE)
+[![Docker Pulls](https://img.shields.io/docker/pulls/nlpsandbox/notebooks.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=pulls&logo=docker)](https://hub.docker.com/r/nlpsandbox/notebooks)
+[![Discord](https://img.shields.io/discord/770484164393828373.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=Discord&logo=discord)](https://nlpsandbox.io/discord "Realtime support / chat with the community and the team")
 
 ## Introduction
 
-TBA
+This repository provides Rmd notebooks that enable you to use R and Python
+together to interact with the NLP Sandbox ecosystem. For example, use example
+notebooks included with this repository to perform analysis using data stored in
+a local or remote instance of the NLP Sandbox Data Node. See the Section
+[Notebooks](#Notebooks) below for the list of notebooks included with this
+repository.
 
-## Specification
-
-- NLP Sandbox schemas version: 1.2.0
-- NLP Sandbox notebooks version: TBA
+The Docker image [nlpsandbox/notebooks] offered by this project is based on the
+image [sagebionetworks/rstudio].
 
 ## Requirements
 
 - [Docker Engine] >=19.03.0
 - [Synapse.org] user account
 
+## Specification
+
+- Notebooks version: 0.1.0
+- NLP Sandbox schemas version: 1.2.0
+
 ## Notebooks
 
-Rmd Notebook | Description | HTML Notebook
--------- | ----------- | -------------
-[generate-dataset.Rmd](notebooks/generate-dataset.Rmd)         | Generation of the i2b2 PHI dataset for the NLP Sandbox.                                | [![HTML notebook](https://img.shields.io/badge/latest-blue.svg?color=1283c3&labelColor=555555&logoColor=ffffff&style=for-the-badge&logo=github)](https://nlpsandbox.github.io/i2b2-phi-dataset/latest/notebooks/generate-dataset.html)
+Rmd Notebook | Description
+-------- | -----------
+[notebook.Rmd](notebooks/notebook.Rmd)         | Default RStudio notebook.
+[r-and-python.Rmd](notebooks/r-and-python.Rmd) | Shows how to use R and Python together.
+[data-node.Rmd](notebooks/data-node.Rmd)       | Interact with an NLP Sandbox Data Node instance.
 
 > Important: Please make sure when you write your own notebooks that no
 > sensitive information ends up being publicly available. Please check with the
@@ -33,36 +45,54 @@ Rmd Notebook | Description | HTML Notebook
 
 ## Usage
 
-1. Create and edit the configuration file.
+Create and edit the configuration file.
 
-       cp .env.example .env
+    cp .env.example .env
 
-2. Start RStudio. Add the option `-d` or `--detach` to run in the background.
+You can either pull the docker image [nlpsandbox/notebooks] or build it using
+the information included in `docker-compose.yml`. To pull the image and start
+RStudio:
 
-       docker compose up
+    docker compose pull
+    docker compose up
+
+If you want to build the image and start RStudio, for instance after having
+customized the `Dockerfile`:
+
+    docker compose up --build
 
 RStudio is now available at http://localhost. On the login page, enter the
 default username (`rstudio`) and the password specified in `.env`.
 
+In RStudio, open the RStudio project provided by this repository by clicking on
+the button `Project: (None)` > `Open Project...` on the top-right corner, then
+select the file `nlpsandbox/nlpsandbox.Rproj`. You should now be able to open
+and run the notebook `r-and-python.Rmd`. This will confirm that you can
+successfully use R and Python togehter.
+
 To stop RStudio, enter `Ctrl+C` followed by `docker compose down`.  If running
 in detached mode, you will only need to enter `docker compose down`.
+
+Tips:
+
+- Add `-d` or `--detach` as in `docker compose up -d` to run in the background.
+- If the command `docker compose` is missing, try `docker-compose`.
 
 ## Configuring the CI/CD workflow
 
 The [CI/CD workflow] of this repository performs the following actions:
 
 - Generate HTML notebooks from R notebook and publishes them to GitHub Pages.
-- Build the Docker image [docker.synapse.org/syn22277123/i2b2-phi-dataset] and
-  push it to Synapse Docker Registry.
+- Build the Docker image [nlpsandbox/notebooks] and push it to Docker Hub.
 
-If you decided to fork this repository, you will need to update the environment
-variables defined at the top of the [CI/CD workflow]. You also need to create
-the following [GitHub Secrets]:
+If you decided to fork this repository or use it as a template, you will need to
+update the environment variables defined at the top of the [CI/CD workflow]. You
+also need to create the following [GitHub Secrets]:
 
-- `RSTUDIO_PASSWORD`: Random password.
-- `SYNAPSE_USERNAME`: Your [Synapse.org] username.
-- `SYNAPSE_TOKEN`: A [personal access token (PAT)] that has the permissions
-  `View`, `Download` and `Modify`.
+- `RSTUDIO_PASSWORD`: "changeme"
+- `DOCKERHUB_USERNAME`: Your Docker Hub username.
+- `DOCKERHUB_TOKEN`: A [personal access token (PAT)] that has the permissions to
+  push the image.
 
 ## Versioning
 
@@ -72,10 +102,10 @@ This repository uses [semantic versioning] to track the releases of this
 project. This repository uses "non-moving" GitHub tags, that is, a tag will
 always point to the same git commit once it has been created.
 
-### GitHub Pages
+### Docker image and GitHub Pages
 
-The artifact published by this repository are HTML notebooks published to GitHub
-Pages and the Docker image [docker.synapse.org/syn22277123/i2b2-phi-dataset].
+The artifact published by this repository are the Docker image
+[nlpsandbox/notebooks] and HTML notebooks published to GitHub Pages.
 
 The table below describes the GH Pages tags available.
 
@@ -98,7 +128,7 @@ running and hard to roll back.
 
 [NLPSandbox.io]: https://nlpsandbox.io
 [semantic versioning]: https://semver.org/
-[Apache License 2.0]: https://github.com/nlpsandbox/nlpsandbox-analysis/blob/main/LICENSE
+[Apache License 2.0]: https://github.com/nlpsandbox/notebooks/blob/main/LICENSE
 [renv.lock]: renv.lock
 [conda/i2b2-phi-dataset/environment.yml]: conda/i2b2-phi-dataset/environment.yml
 [CI/CD workflow]: .github/workflows/ci.yml
@@ -112,3 +142,5 @@ running and hard to roll back.
 [NLP Sandbox CLI]: https://github.com/nlpsandbox/nlpsandbox-client
 [GitHub Secrets]: https://docs.github.com/en/actions/reference/encrypted-secrets
 [personal access token (PAT)]: https://help.synapse.org/docs/Managing-Your-Account.2055405596.html
+[sagebionetworks/rstudio]: https://github.com/Sage-Bionetworks/docker-rstudio
+[nlpsandbox/notebooks]: https://hub.docker.com/repository/docker/nlpsandbox/notebooks
