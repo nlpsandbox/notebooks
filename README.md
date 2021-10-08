@@ -2,9 +2,11 @@
 
 # NLP Sandbox Notebooks
 
-[![GitHub Release](https://img.shields.io/github/release/nlpsandbox/nlpsandbox-analysis.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&logo=github)](https://github.com/nlpsandbox/nlpsandbox-analysis/releases)
-[![GitHub CI](https://img.shields.io/github/workflow/status/nlpsandbox/nlpsandbox-analysis/CI.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&logo=github)](https://github.com/nlpsandbox/nlpsandbox-analysis)
-[![GitHub License](https://img.shields.io/github/license/nlpsandbox/nlpsandbox-analysis.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&logo=github)](https://github.com/nlpsandbox/nlpsandbox-analysis/blob/main/LICENSE)
+[![GitHub Release](https://img.shields.io/github/release/nlpsandbox/notebooks.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&logo=github)](https://github.com/nlpsandbox/notebooks/releases)
+[![GitHub CI](https://img.shields.io/github/workflow/status/nlpsandbox/notebooks/CI.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&logo=github)](https://github.com/nlpsandbox/notebooks)
+[![GitHub License](https://img.shields.io/github/license/nlpsandbox/notebooks.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&logo=github)](https://github.com/nlpsandbox/notebooks/blob/main/LICENSE)
+[![Docker Pulls](https://img.shields.io/docker/pulls/nlpsandbox/notebooks.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=pulls&logo=docker)](https://hub.docker.com/r/nlpsandbox/notebooks)
+[![Discord](https://img.shields.io/discord/770484164393828373.svg?color=94398d&labelColor=555555&logoColor=ffffff&style=for-the-badge&label=Discord&logo=discord)](https://nlpsandbox.io/discord "Realtime support / chat with the community and the team")
 
 ## Introduction
 
@@ -12,8 +14,8 @@ TBA
 
 ## Specification
 
+- NLP Sandbox notebooks version: 0.1.0
 - NLP Sandbox schemas version: 1.2.0
-- NLP Sandbox notebooks version: TBA
 
 ## Requirements
 
@@ -98,7 +100,7 @@ running and hard to roll back.
 
 [NLPSandbox.io]: https://nlpsandbox.io
 [semantic versioning]: https://semver.org/
-[Apache License 2.0]: https://github.com/nlpsandbox/nlpsandbox-analysis/blob/main/LICENSE
+[Apache License 2.0]: https://github.com/nlpsandbox/notebooks/blob/main/LICENSE
 [renv.lock]: renv.lock
 [conda/i2b2-phi-dataset/environment.yml]: conda/i2b2-phi-dataset/environment.yml
 [CI/CD workflow]: .github/workflows/ci.yml
