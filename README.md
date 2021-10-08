@@ -56,8 +56,8 @@ RStudio:
     docker compose pull
     docker compose up
 
-If you want to build the image and start RStudio, for instance after having
-customized the `Dockerfile`:
+If you want to build the image and start RStudio, for instance after customizing
+`Dockerfile`:
 
     docker compose up --build
 
