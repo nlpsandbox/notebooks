@@ -98,7 +98,7 @@ syn$login()
 
 ```{r}
 schemas_version <- Sys.getenv("APP_NLPSANDBOX_SCHEMAS_VERSION")
-dataset_version <- "1.2.1"
+dataset_version <- "1.2.2"
 
 # Original files of the 2014 i2b2 NLP De-identification challenge.
 dataset_archives = list(
@@ -540,13 +540,14 @@ noop <- lapply(names(datasets), function(dataset_name) {
 
 ### Example dataset
 
-The data from a single patient (patient ID `110`).
+Extract the data from ten patients from the training dataset (patient ID `100` 
+to `109`).
 
 ```{r}
 # create output dir if needed
 dir.create(job_output_dir, recursive = TRUE, showWarnings = FALSE)
 
-dataset_name <- "evaluation"
+dataset_name <- "training"
 dataset <- datasets[[dataset_name]]
 patient_ids <- as.character(100:109)
 
@@ -562,6 +563,7 @@ patient_bundles <- lapply(patient_ids, function(patient_id) {
   tag <- paste0(patient_id, "-")
   xml_paths <- sort(dataset$xml_paths[grepl(tag, dataset$xml_paths)])
   note_bundles <- lapply(xml_paths, function(xml_path){
+    # xml_path <- "/home/rstudio/nlp-sandbox-analysis/data/testing-PHI-Gold-fixed/110-01.xml"
     # create note object
     note_xml_doc <- read_xml(xml_path, options = "NOCDATA")
     note_text <- xml_text(xml_find_all(note_xml_doc, "//TEXT"), trim = FALSE)
@@ -589,6 +591,16 @@ patient_bundles <- lapply(patient_ids, function(patient_id) {
     df <- df[df$noteId == noteId,]
     text_location_annotations <- df %>% purrr::transpose()
 
+    ## get contact annotations
+    df <- contact_annotations[[dataset_name]]
+    df <- df[df$noteId == noteId,]
+    text_contact_annotations <- df %>% purrr::transpose()
+
+    ## get id annotations
+    df <- id_annotations[[dataset_name]]
+    df <- df[df$noteId == noteId,]
+    text_id_annotations <- df %>% purrr::transpose()
+
     annotation=list(
       annotationSource=list(
         resourceSource=list(
@@ -597,7 +609,9 @@ patient_bundles <- lapply(patient_ids, function(patient_id) {
       ),
       textDateAnnotations=text_date_annotations,
       textPersonNameAnnotations=text_person_name_annotations,
-      textLocationAnnotations=text_location_annotations
+      textLocationAnnotations=text_location_annotations,
+      textContactAnnotations=text_contact_annotations,
+      textIdAnnotations=text_id_annotations
     )
 
     # create note bundle
