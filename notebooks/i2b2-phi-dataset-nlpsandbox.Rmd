@@ -80,7 +80,7 @@ options(reticulate.repl.quiet = TRUE)
 conda_list(conda = "auto")
 ```
 
-Activate the environment `i2b2-phi-dataset`.
+Activate the environment `nlpsandbox`.
 
 ```{r}
 use_condaenv("nlpsandbox", required = TRUE)
