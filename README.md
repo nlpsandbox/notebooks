@@ -99,7 +99,7 @@ Launch jupyter notebook by running
 
     jupyter notebook --allow-root --port=8888 --no-browser --ip=0.0.0.0
 
-This jupyter notebook is now available at http://localhost:8888
+The jupyter notebook is now available at http://localhost:8888
 
 ## Configuring the CI/CD workflow
 
