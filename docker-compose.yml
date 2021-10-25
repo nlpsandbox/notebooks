@@ -11,12 +11,17 @@ services:
       - .env
     volumes:
       - .:/home/rstudio/nlpsandbox:rw
-    # networks:
-    #   - data-node
+    networks:
+      - data-node
+      - nlpsandbox
     ports:
       - "${HOST_PORT}:8787"
+      - "8888:8888"
 
-# networks:
-#   data-node:
-#     external: true
-#     name: data-node_default
+networks:
+  data-node:
+    external: true
+    name: data-node_default
+  nlpsandbox:
+    external: true
+    name: phi-annotator-example_nlpsandbox

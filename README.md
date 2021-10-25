@@ -36,7 +36,8 @@ Rmd Notebook | Description
 -------- | -----------
 [notebook.Rmd](notebooks/notebook.Rmd)         | Default RStudio notebook.
 [r-and-python.Rmd](notebooks/r-and-python.Rmd) | Shows how to use R and Python together.
-[data-node.Rmd](notebooks/data-node.Rmd)       | Interact with an NLP Sandbox Data Node instance.
+[data-node.Rmd](notebooks/data-node.Rmd)       | Interact with an NLP Sandbox Data Node instance.|
+[nlpsandbox-client.ipynb](python/nlpsandbox-client.ipynb) | Jupyter notebook to demonstrate how to interact with Data Node and PHI annotators.
 
 > Important: Please make sure when you write your own notebooks that no
 > sensitive information ends up being publicly available. Please check with the
@@ -61,6 +62,13 @@ If you want to build the image and start RStudio, for instance after customizing
 
     docker compose up --build
 
+Tips:
+
+- Add `-d` or `--detach` as in `docker compose up -d` to run in the background.
+- If the command `docker compose` is missing, try `docker-compose`.
+
+### Rstudio
+
 RStudio is now available at http://localhost. On the login page, enter the
 default username (`rstudio`) and the password specified in `.env`.
 
@@ -73,10 +81,25 @@ successfully use R and Python togehter.
 To stop RStudio, enter `Ctrl+C` followed by `docker compose down`.  If running
 in detached mode, you will only need to enter `docker compose down`.
 
-Tips:
+### Jupyter notebook
 
-- Add `-d` or `--detach` as in `docker compose up -d` to run in the background.
-- If the command `docker compose` is missing, try `docker-compose`.
+To Launch the jupyter notebook. Firstly, find the docker container id by running
+
+    docker ps
+
+Interact with the running docker container by running
+
+    docker exec -it DOCKER_CONTAINER_ID bash
+
+This command will launch a bash environment. Once in it, install jupyter notebook
+
+    pip install jupyter notebook
+
+Launch jupyter notebook by running
+
+    jupyter notebook --allow-root --port=8888 --no-browser --ip=0.0.0.0
+
+This jupyter notebook is now available at http://localhost:8888
 
 ## Configuring the CI/CD workflow
 

@@ -105,6 +105,7 @@ use_condaenv("nlpsandbox", required = TRUE)
 
 ```{python}
 data_node_host = "http://data-node:8080/api/v1"
+annotator_host = "http://nginx:80/api/v1"
 ```
 
 
@@ -121,6 +122,88 @@ datasets = client.list_datasets(host=data_node_host)
 
 for dataset in datasets:
   print(dataset)
+```
+
+
+```{python}
+# an example of using the annotator to annotate one note
+from nlpsandboxclient import client
+
+example_note = {
+   "identifier": "note-1",
+   "type": "loinc:LP29684-5",
+   "patientId": "507f1f77bcf86cd799439011",
+   "text": "On 12/26/2020, Ms. Chloe Price met with Dr. Prescott in Seattle."
+}
+
+annotations = client.annotate_note(host=annotator_host,
+                            note=example_note,
+                            tool_type="nlpsandbox:date-annotator")
+
+print(annotations)
+```
+
+
+```{python}
+# an example of using the annotator to annotate all notes in the test dataset
+from nlpsandboxclient import client
+notes = client.list_notes(host=data_node_host,
+                  dataset_id="test-dataset",
+                  fhir_store_id="evaluation")
+test_notes = list(notes)
+annotation_store_name = 'test'
+dataset_name = 'test-dataset'
+annotation_list = []
+converted_annotation_list = []
+for i in test_notes:
+   note_name= i.pop('note_name', None)
+   note_id = note_name[-6:]
+   # There is the error in annotation generated from  client.annotate_note, the note_name is "dataset/.."  but it should be "datasets/.."
+   note_name = "datasets"+note_name[7:]
+   annotations = client.annotate_note(host=annotator_host,
+                            note=i,
+                            tool_type="nlpsandbox:date-annotator")
+
+   annotation_name = f"datasets/{dataset_name}/annotationStores/{annotation_store_name}/annotations/{note_id}"
+
+   converted_annotation = {"annotationSource":{"resourceSource":{"name":note_name}},"name":annotation_name,"textContactAnnotations": [],
+  "textCovidSymptomAnnotations":[],"textDateAnnotations":annotations["textDateAnnotations"],"textIdAnnotations":[],"textLocationAnnotations": [],"textPersonNameAnnotations": []}
+
+   converted_annotation_list.append(converted_annotation)
+```
+
+
+```{python}
+#for j in converted_annotation_list:
+  #print(j)
+
+client.store_annotations(host=data_node_host,
+                 dataset_id=dataset_name,
+                 annotation_store_id= annotation_store_name,
+                 annotations = converted_annotation_list[0],
+                 delete_existing_annotations = False)
 
 ```
 
+```{python}
+print(converted_annotation_list[0])
+```
+
+
+
+```{python}
+print(len(converted_annotation_list))
+```
+
+
+
+
+```{python}
+# an example of evaluating annotations made from one tool to another
+from nlpsandboxclient import client
+annotation = client.get_annotation(
+    host=data_node_host, dataset_id="awesome-dataset",
+    annotation_store_id="awesome-annotation-store",
+    annotation_id="awesome-annotation"
+)
+```
