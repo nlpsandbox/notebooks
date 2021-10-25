@@ -23,7 +23,7 @@ image [sagebionetworks/rstudio].
 ## Requirements
 
 - [Docker Engine] >=19.03.0
-- [Synapse.org] user account
+- [Synapse.org] user account (optional)
 
 ## Specification
 
