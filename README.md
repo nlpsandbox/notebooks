@@ -83,7 +83,7 @@ in detached mode, you will only need to enter `docker compose down`.
 
 ### Jupyter notebook
 
-To Launch the jupyter notebook. Firstly, find the docker container id by running
+We provide jupyter notebook as an alternative option to RStudio. To Launch the jupyter notebook. Firstly, find the docker container id by running
 
     docker ps
 
