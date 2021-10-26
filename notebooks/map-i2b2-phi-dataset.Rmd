@@ -104,7 +104,7 @@ Dataset = list(
 )
 
 # SELECT DATASET
-dataset = Dataset$mayo_clinic
+dataset = Dataset$i2b2
 
 if (dataset == Dataset$i2b2) {
   # 2014 i2b2 PHI De-identification dataset (raw data in XML format)
@@ -627,7 +627,7 @@ noop <- lapply(names(datasets), function(dataset_name) {
   # dataset_dir <- file.path(job_output_dir, dataset_name)
   dir.create(job_output_dir, recursive = TRUE, showWarnings = FALSE)
   data_json <- jsonlite::toJSON(data, auto_unbox = TRUE, pretty = TRUE)
-  write(data_json, file.path(job_output_dir, paste0("i2b2-phi-dataset-", dataset_name, ".json")))
+  write(data_json, file.path(job_output_dir, paste0("phi-annotation-dataset-", dataset_name, ".json")))
 })
 ```
 
@@ -729,7 +729,7 @@ data <- list(
 # dataset_dir <- file.path(job_output_dir, dataset_name)
 dir.create(job_output_dir, recursive = TRUE, showWarnings = FALSE)
 data_json <- jsonlite::toJSON(data, auto_unbox = TRUE, pretty = TRUE)
-write(data_json, file.path(job_output_dir, paste0("i2b2-phi-dataset-example.json")))
+write(data_json, file.path(job_output_dir, paste0("phi-annotation-dataset-example.json")))
 ```
 
 ### Generated files
