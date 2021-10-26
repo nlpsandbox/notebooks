@@ -1,5 +1,5 @@
 ---
-title: "Generating the i2b2 PHI dataset for the NLP Sandbox"
+title: "Mapping PHI annotation dataset from i2b2 to NLP Sandbox schemas"
 author: "NLP Sandbox Team (team@nlpsandbox.io)"
 date: "`r Sys.Date()`"
 output:
@@ -45,8 +45,6 @@ using the [NLP Sandbox Schemas]. The JSON files generated can then be stored in
 an instance of the [NLP Sandbox Data Node]. A Python script that reads a dataset
 JSON file and push its content to a Data Node is provided in the GitHub
 repository of the [NLP Sandbox Client Library for Python].
-
-
 
 # Setup
 
@@ -98,23 +96,58 @@ syn$login()
 
 ```{r}
 schemas_version <- Sys.getenv("APP_NLPSANDBOX_SCHEMAS_VERSION")
-dataset_version <- "1.2.2"
+notebook_version <- "1.3.0"
 
-# Original files of the 2014 i2b2 NLP De-identification challenge.
-dataset_archives = list(
-  training_1 = list(
-    synId = "syn23196860",  # 2014_training-PHI-Gold-Set1.tar.gz
-    type = "training"
-  ),
-  training_2 = list(
-    synId = "syn23196850",  # training-PHI-Gold-Set2.tar.gz
-    type = "training"
-  ),
-  evaluation = list(
-    synId = "syn23196857",  # testing-PHI-Gold-fixed.tar.gz
-    type = "evaluation"
-  )
+Dataset = list(
+  i2b2 = "i2b2",
+  mayo_clinic = "mayo-clinic"
 )
+
+# SELECT DATASET
+dataset = Dataset$i2b2
+dataset = Dataset$mayo_clinic
+
+if (dataset == Dataset$i2b2) {
+  # 2014 i2b2 PHI De-identification dataset (raw data in XML format)
+  dataset_archives = list(
+    training_1 = list(
+      synId = "syn23196860",  # 2014_training-PHI-Gold-Set1.tar.gz
+      type = "training"
+    ),
+    training_2 = list(
+      synId = "syn23196850",  # training-PHI-Gold-Set2.tar.gz
+      type = "training"
+    ),
+    evaluation = list(
+      synId = "syn23196857",  # testing-PHI-Gold-fixed.tar.gz
+      type = "evaluation"
+    )
+  )
+  output_files = list(
+    training = list(
+      annotations_json = file.path(job_output_dir, paste0("training-set-annotations.json")),
+      patients_json = file.path(job_output_dir, paste0("training-set-patients.json"))
+    ),
+    evaluation = list(
+      annotations_json = file.path(job_output_dir, paste0("evaluation-set-annotations.json")),
+      patients_json = file.path(job_output_dir, paste0("evaluation-set-patients.json"))
+    )
+  )
+} else if (dataset == Dataset$mayo_clinic) {
+  # Mayo Clinic anonymized dataset (raw data in XML format)
+  dataset_archives = list(
+    evaluation = list(
+      synId = "syn26402612",  # phi-annotation-evaluation-set-mayo-clinic.tar.gz
+      type = "evaluation"
+    )
+  )
+  output_files = list(
+    evaluation = list(
+      annotations_json = file.path(job_output_dir, paste0("evaluation-set-annotations.json")),
+      patients_json = file.path(job_output_dir, paste0("evaluation-set-patients.json"))
+    )
+  )
+}
 
 # Project folders
 project_dir <- rprojroot::find_rstudio_root_file()
@@ -122,28 +155,14 @@ data_dir <- file.path(project_dir, "data")
 output_dir <- file.path(project_dir, "output")
 
 # Output folders
-job_name <- "i2b2-phi-dataset-nlpsandbox"
-job_version <- dataset_version
+job_name <- paste0("phi-annotation-", dataset)
+job_version <- notebook_version
 job_dir <- file.path(output_dir, job_name)
 job_output_dir <- file.path(job_dir, job_version)
-
-# Local output files
-output_files = list(
-  training = list(
-    annotations_json = file.path(job_output_dir, paste0("training-set-annotations.json")),
-    patients_json = file.path(job_output_dir, paste0("training-set-patients.json"))
-  ),
-  evaluation = list(
-    annotations_json = file.path(job_output_dir, paste0("evaluation-set-annotations.json")),
-    patients_json = file.path(job_output_dir, paste0("evaluation-set-patients.json"))
-  )
-)
 
 # Number of CPU cores
 num_cores = parallel::detectCores()
 ```
-
-
 
 # Pulling data from Synapse
 
@@ -192,8 +211,6 @@ Number of clinical notes per dataset:
 lapply(datasets, function(dataset) { length(dataset$xml_paths) })
 ```
 
-
-
 # Generating the dataset using NLP Sandbox Schemas
 
 Extract the annotations from the XML files and save them to data frames.
@@ -235,7 +252,6 @@ Number of annotations per dataset:
 lapply(datasets, function(dataset) { nrow(dataset$annotations) })
 ```
 
-
 ## Preparation
 
 ### Setting the type of annotation properties
@@ -270,7 +286,6 @@ datasets <- lapply(datasets, function(dataset) {
 # datasets$evaluation$annotations
 names(datasets$evaluation$annotations)
 ```
-
 
 ## Generating annotations
 
@@ -321,7 +336,6 @@ person_name_annotations <- lapply(names(datasets), function(dataset_name) {
 names(person_name_annotations) <- names(datasets)
 ```
 
-
 ### Location annotations
 
 ```{r}
@@ -348,14 +362,31 @@ location_annotations <- lapply(names(datasets), function(dataset_name) {
   dataset <- datasets[[dataset_name]]
   annotations <- dataset$annotations
   annotations <- annotations[annotations$name == "LOCATION",]
-  data.frame(
-    noteId = paste0(annotations$patient_id, "-", annotations$note_index),
-    start = annotations$start,
-    length = annotations$length,
-    text = annotations$text,
-    confidence = 100,
-    locationType = locationTypeLUT$nlp_sandbox[match(annotations$TYPE, locationTypeLUT$i2b2)],
-    stringsAsFactors = FALSE)
+  if (nrow(annotations) > 0) {
+    return(
+      data.frame(
+        noteId = paste0(annotations$patient_id, "-", annotations$note_index),
+        start = annotations$start,
+        length = annotations$length,
+        text = annotations$text,
+        confidence = 100,
+        locationType = locationTypeLUT$nlp_sandbox[match(annotations$TYPE, locationTypeLUT$i2b2)],
+        stringsAsFactors = FALSE
+      )
+    )
+  } else {
+    return(
+      data.frame(
+        noteId = character(),
+        start = numeric(),
+        length = numeric(),
+        text = character(),
+        confidence = numeric(),
+        locationType = character(),
+        stringsAsFactors = FALSE
+      )
+    )
+  }
 })
 names(location_annotations) <- names(datasets)
 ```
@@ -388,14 +419,31 @@ id_annotations <- lapply(names(datasets), function(dataset_name) {
   dataset <- datasets[[dataset_name]]
   annotations <- dataset$annotations
   annotations <- annotations[annotations$name == "ID",]
-  data.frame(
-    noteId = paste0(annotations$patient_id, "-", annotations$note_index),
-    start = annotations$start,
-    length = annotations$length,
-    text = annotations$text,
-    confidence = 100,
-    idType = idTypeLUT$nlp_sandbox[match(annotations$TYPE, idTypeLUT$i2b2)],
-    stringsAsFactors = FALSE)
+  if (nrow(annotations) > 0) {
+    return(
+      data.frame(
+        noteId = paste0(annotations$patient_id, "-", annotations$note_index),
+        start = annotations$start,
+        length = annotations$length,
+        text = annotations$text,
+        confidence = 100,
+        idType = idTypeLUT$nlp_sandbox[match(annotations$TYPE, idTypeLUT$i2b2)],
+        stringsAsFactors = FALSE
+      )
+    )
+  } else {
+    return(
+      data.frame(
+        noteId = character(),
+        start = numeric(),
+        length = numeric(),
+        text = character(),
+        confidence = numeric(),
+        locationType = character(),
+        stringsAsFactors = FALSE
+      )
+    )
+  }
 })
 names(id_annotations) <- names(datasets)
 ```
@@ -420,19 +468,34 @@ contact_annotations <- lapply(names(datasets), function(dataset_name) {
   dataset <- datasets[[dataset_name]]
   annotations <- dataset$annotations
   annotations <- annotations[annotations$name == "CONTACT",]
-  data.frame(
-    noteId = paste0(annotations$patient_id, "-", annotations$note_index),
-    start = annotations$start,
-    length = annotations$length,
-    text = annotations$text,
-    confidence = 100,
-    contactType = contactTypeLUT$nlp_sandbox[match(annotations$TYPE, contactTypeLUT$i2b2)],
-    stringsAsFactors = FALSE)
+  if (nrow(annotations) > 0) {
+    return(
+      data.frame(
+        noteId = paste0(annotations$patient_id, "-", annotations$note_index),
+        start = annotations$start,
+        length = annotations$length,
+        text = annotations$text,
+        confidence = 100,
+        contactType = contactTypeLUT$nlp_sandbox[match(annotations$TYPE, contactTypeLUT$i2b2)],
+        stringsAsFactors = FALSE
+      )
+    )
+  } else {
+    return(
+      data.frame(
+        noteId = character(),
+        start = numeric(),
+        length = numeric(),
+        text = character(),
+        confidence = numeric(),
+        locationType = character(),
+        stringsAsFactors = FALSE
+      )
+    )
+  }
 })
 names(contact_annotations) <- names(datasets)
 ```
-
-
 
 # Exporting data to files
 
@@ -540,7 +603,7 @@ noop <- lapply(names(datasets), function(dataset_name) {
 
 ### Example dataset
 
-Extract the data from ten patients from the training dataset (patient ID `100` 
+Extract the data from ten patients from the training dataset (patient ID `100`
 to `109`).
 
 ```{r}
