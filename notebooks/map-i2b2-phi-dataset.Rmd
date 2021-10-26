@@ -105,7 +105,6 @@ Dataset = list(
 
 # SELECT DATASET
 dataset = Dataset$i2b2
-dataset = Dataset$mayo_clinic
 
 if (dataset == Dataset$i2b2) {
   # 2014 i2b2 PHI De-identification dataset (raw data in XML format)
@@ -133,6 +132,7 @@ if (dataset == Dataset$i2b2) {
       patients_json = file.path(job_output_dir, paste0("evaluation-set-patients.json"))
     )
   )
+  example_patient_ids <- as.character(100:109)
 } else if (dataset == Dataset$mayo_clinic) {
   # Mayo Clinic anonymized dataset (raw data in XML format)
   dataset_archives = list(
@@ -147,6 +147,7 @@ if (dataset == Dataset$i2b2) {
       patients_json = file.path(job_output_dir, paste0("evaluation-set-patients.json"))
     )
   )
+  example_patient_ids <- c()
 }
 
 # Project folders
@@ -305,15 +306,29 @@ Annotation | Description | NLP Sandbox schema
 date_annotations <- lapply(names(datasets), function(dataset_name) {
   dataset <- datasets[[dataset_name]]
   annotations <- dataset$annotations
-  annotations <- annotations[annotations$name == "DATE",]
-  data.frame(
-    noteId = paste0(annotations$patient_id, "-", annotations$note_index),
-    start = annotations$start,
-    length = annotations$length,
-    text = annotations$text,
-    confidence = 100,
-    dateFormat = "",
-    stringsAsFactors = FALSE)
+  if (sum(annotations$name == "DATE") > 0) {
+    annotations <- annotations[annotations$name == "DATE",]
+    data.frame(
+      noteId = paste0(annotations$patient_id, "-", annotations$note_index),
+      start = annotations$start,
+      length = annotations$length,
+      text = annotations$text,
+      confidence = 100,
+      dateFormat = "",
+      stringsAsFactors = FALSE)
+  } else {
+    return(
+      data.frame(
+        noteId = character(),
+        start = numeric(),
+        length = numeric(),
+        text = character(),
+        confidence = numeric(),
+        dateFormat = character(),
+        stringsAsFactors = FALSE
+      )
+    )
+  }
 })
 names(date_annotations) <- names(datasets)
 ```
@@ -324,14 +339,30 @@ names(date_annotations) <- names(datasets)
 person_name_annotations <- lapply(names(datasets), function(dataset_name) {
   dataset <- datasets[[dataset_name]]
   annotations <- dataset$annotations
-  annotations <- annotations[annotations$name == "NAME",]
-  data.frame(
-    noteId = paste0(annotations$patient_id, "-", annotations$note_index),
-    start = annotations$start,
-    length = annotations$length,
-    text = annotations$text,
-    confidence = 100,
-    stringsAsFactors = FALSE)
+  if (sum(annotations$name == "NAME") > 0) {
+    annotations <- annotations[annotations$name == "NAME",]
+    return(
+      data.frame(
+        noteId = paste0(annotations$patient_id, "-", annotations$note_index),
+        start = annotations$start,
+        length = annotations$length,
+        text = annotations$text,
+        confidence = 100,
+        stringsAsFactors = FALSE
+      ) 
+    )
+  } else {
+    return(
+      data.frame(
+        noteId = character(),
+        start = numeric(),
+        length = numeric(),
+        text = character(),
+        confidence = numeric(),
+        stringsAsFactors = FALSE
+      )
+    )
+  }
 })
 names(person_name_annotations) <- names(datasets)
 ```
@@ -349,7 +380,7 @@ locationTypeLUT <- data.frame(
            "STATE",
            "STREET",
            "ZIP"),
-  nlp_sandbox = c("city",
+  nlpsandbox = c("city",
                   "country",
                   "hospital",
                   "other",
@@ -361,8 +392,8 @@ locationTypeLUT <- data.frame(
 location_annotations <- lapply(names(datasets), function(dataset_name) {
   dataset <- datasets[[dataset_name]]
   annotations <- dataset$annotations
-  annotations <- annotations[annotations$name == "LOCATION",]
-  if (nrow(annotations) > 0) {
+  if (sum(annotations$name == "LOCATION") > 0) {
+    annotations <- annotations[annotations$name == "LOCATION",]
     return(
       data.frame(
         noteId = paste0(annotations$patient_id, "-", annotations$note_index),
@@ -370,7 +401,7 @@ location_annotations <- lapply(names(datasets), function(dataset_name) {
         length = annotations$length,
         text = annotations$text,
         confidence = 100,
-        locationType = locationTypeLUT$nlp_sandbox[match(annotations$TYPE, locationTypeLUT$i2b2)],
+        locationType = locationTypeLUT$nlpsandbox[match(annotations$TYPE, locationTypeLUT$i2b2)],
         stringsAsFactors = FALSE
       )
     )
@@ -405,7 +436,7 @@ idTypeLUT <- data.frame(
            "MEDICALRECORD",
            "SSN",
            "VEHICLE"),
-  nlp_sandbox = c("account",
+  nlpsandbox = c("account",
                   "bio_id",
                   "device",
                   "health_plan",
@@ -418,8 +449,8 @@ idTypeLUT <- data.frame(
 id_annotations <- lapply(names(datasets), function(dataset_name) {
   dataset <- datasets[[dataset_name]]
   annotations <- dataset$annotations
-  annotations <- annotations[annotations$name == "ID",]
-  if (nrow(annotations) > 0) {
+  if (sum(annotations$name == "ID") > 0) {
+    annotations <- annotations[annotations$name == "ID",]
     return(
       data.frame(
         noteId = paste0(annotations$patient_id, "-", annotations$note_index),
@@ -427,7 +458,7 @@ id_annotations <- lapply(names(datasets), function(dataset_name) {
         length = annotations$length,
         text = annotations$text,
         confidence = 100,
-        idType = idTypeLUT$nlp_sandbox[match(annotations$TYPE, idTypeLUT$i2b2)],
+        idType = idTypeLUT$nlpsandbox[match(annotations$TYPE, idTypeLUT$i2b2)],
         stringsAsFactors = FALSE
       )
     )
@@ -439,7 +470,7 @@ id_annotations <- lapply(names(datasets), function(dataset_name) {
         length = numeric(),
         text = character(),
         confidence = numeric(),
-        locationType = character(),
+        idType = character(),
         stringsAsFactors = FALSE
       )
     )
@@ -458,7 +489,7 @@ contactTypeLUT <- data.frame(
            "IPADDR",
            "PHONE",
            "URL"),
-  nlp_sandbox = c("email",
+  nlpsandbox = c("email",
                   "fax",
                   "ip_address",
                   "phone",
@@ -467,8 +498,8 @@ contactTypeLUT <- data.frame(
 contact_annotations <- lapply(names(datasets), function(dataset_name) {
   dataset <- datasets[[dataset_name]]
   annotations <- dataset$annotations
-  annotations <- annotations[annotations$name == "CONTACT",]
-  if (nrow(annotations) > 0) {
+  if (sum(annotations$name == "CONTACT") > 0) {
+    annotations <- annotations[annotations$name == "CONTACT",]
     return(
       data.frame(
         noteId = paste0(annotations$patient_id, "-", annotations$note_index),
@@ -476,7 +507,7 @@ contact_annotations <- lapply(names(datasets), function(dataset_name) {
         length = annotations$length,
         text = annotations$text,
         confidence = 100,
-        contactType = contactTypeLUT$nlp_sandbox[match(annotations$TYPE, contactTypeLUT$i2b2)],
+        contactType = contactTypeLUT$nlpsandbox[match(annotations$TYPE, contactTypeLUT$i2b2)],
         stringsAsFactors = FALSE
       )
     )
@@ -488,7 +519,7 @@ contact_annotations <- lapply(names(datasets), function(dataset_name) {
         length = numeric(),
         text = character(),
         confidence = numeric(),
-        locationType = character(),
+        contactType = character(),
         stringsAsFactors = FALSE
       )
     )
@@ -612,7 +643,7 @@ dir.create(job_output_dir, recursive = TRUE, showWarnings = FALSE)
 
 dataset_name <- "training"
 dataset <- datasets[[dataset_name]]
-patient_ids <- as.character(100:109)
+patient_ids <- example_patient_ids
 
 # patient_ids <- patient_ids[1:2]
 patient_bundles <- lapply(patient_ids, function(patient_id) {
