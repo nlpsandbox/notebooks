@@ -104,7 +104,7 @@ Dataset = list(
 )
 
 # SELECT DATASET
-dataset = Dataset$i2b2
+dataset = Dataset$mayo_clinic
 
 if (dataset == Dataset$i2b2) {
   # 2014 i2b2 PHI De-identification dataset (raw data in XML format)
@@ -122,16 +122,8 @@ if (dataset == Dataset$i2b2) {
       type = "evaluation"
     )
   )
-  output_files = list(
-    training = list(
-      annotations_json = file.path(job_output_dir, paste0("training-set-annotations.json")),
-      patients_json = file.path(job_output_dir, paste0("training-set-patients.json"))
-    ),
-    evaluation = list(
-      annotations_json = file.path(job_output_dir, paste0("evaluation-set-annotations.json")),
-      patients_json = file.path(job_output_dir, paste0("evaluation-set-patients.json"))
-    )
-  )
+  # Identifiers of the patients to include in the example dataset extracted
+  # extracted from the training dataset.
   example_patient_ids <- as.character(100:109)
 } else if (dataset == Dataset$mayo_clinic) {
   # Mayo Clinic anonymized dataset (raw data in XML format)
@@ -141,12 +133,8 @@ if (dataset == Dataset$i2b2) {
       type = "evaluation"
     )
   )
-  output_files = list(
-    evaluation = list(
-      annotations_json = file.path(job_output_dir, paste0("evaluation-set-annotations.json")),
-      patients_json = file.path(job_output_dir, paste0("evaluation-set-patients.json"))
-    )
-  )
+  # Identifiers of the patients to include in the example dataset extracted
+  # extracted from the training dataset.
   example_patient_ids <- c()
 }
 
@@ -160,6 +148,17 @@ job_name <- paste0("phi-annotation-", dataset)
 job_version <- notebook_version
 job_dir <- file.path(output_dir, job_name)
 job_output_dir <- file.path(job_dir, job_version)
+
+output_files = list(
+  training = list(
+    annotations_json = file.path(job_output_dir, paste0("training-set-annotations.json")),
+    patients_json = file.path(job_output_dir, paste0("training-set-patients.json"))
+  ),
+  evaluation = list(
+    annotations_json = file.path(job_output_dir, paste0("evaluation-set-annotations.json")),
+    patients_json = file.path(job_output_dir, paste0("evaluation-set-patients.json"))
+  )
+)
 
 # Number of CPU cores
 num_cores = parallel::detectCores()
