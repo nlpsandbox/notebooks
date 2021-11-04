@@ -10,33 +10,45 @@
 
 ## Introduction
 
-This repository provides Rmd notebooks that enable you to use R and Python
-together to interact with the NLP Sandbox ecosystem. For example, use example
-notebooks included with this repository to perform analysis using data stored in
-a local or remote instance of the NLP Sandbox Data Node. See the Section
-[Notebooks](#Notebooks) below for the list of notebooks included with this
-repository.
+This repository provides a portable development environment that includes
+RStudio and Jupyter. This environment aims to support NLP Sandbox users who
+develop or apply tools that intereact with the NLP Sandbox ecosystem.
 
-The Docker image [nlpsandbox/notebooks] offered by this project is based on the
-image [sagebionetworks/rstudio].
+For example, try the example notebooks included with this repository to perform
+analysis using data stored in a local or remote instance of the NLP Sandbox Data
+Node. See the Section [Notebooks](#Notebooks) for the list of example notebooks
+included with this repository.
+
+The Docker image [nlpsandbox/notebooks] that comes with this project is based on
+the image [sagebionetworks/rstudio].
 
 ## Requirements
 
-- [Docker Engine] >=19.03.0
+- [Docker Engine] >= 19.03.0
 - [Synapse.org] user account
 
 ## Specification
 
-- Notebooks version: 0.1.0
+- Notebooks version: 0.2.0
 - NLP Sandbox schemas version: 1.2.0
+- RStudio version:
+- JupyterLab version:
 
 ## Notebooks
 
-Rmd Notebook | Description
+Example notebooks for RStudio:
+
+Notebook | Description
 -------- | -----------
-[notebook.Rmd](notebooks/notebook.Rmd)         | Default RStudio notebook.
-[r-and-python.Rmd](notebooks/r-and-python.Rmd) | Shows how to use R and Python together.
-[data-node.Rmd](notebooks/data-node.Rmd)       | Interact with an NLP Sandbox Data Node instance.
+[notebook.Rmd](notebooks/rstudio/notebook.Rmd)         | Default RStudio notebook.
+[r-and-python.Rmd](notebooks/rstudio/r-and-python.Rmd) | Shows how to use R and Python together.
+[data-node.Rmd](notebooks/rstudio/data-node.Rmd)       | Interact with an NLP Sandbox Data Node instance.
+
+Example notebooks for Jupiter:
+
+Notebook | Description
+-------- | -----------
+[hello-world.ipynb](notebooks/jupyter/hello-world.ipynb) | Hello World notebook.
 
 > Important: Please make sure when you write your own notebooks that no
 > sensitive information ends up being publicly available. Please check with the
@@ -45,32 +57,37 @@ Rmd Notebook | Description
 
 ## Usage
 
-Create and edit the configuration file.
+Create the configuration file.
 
     cp .env.example .env
 
-You can either pull the docker image [nlpsandbox/notebooks] or build it using
+Specify in the config file what IDE should be used.
+
+    # Notebook IDE ("rstudio" or "jupyter")
+    IDE=rstudio
+
+You can either pull the Docker image [nlpsandbox/notebooks] or build it using
 the information included in `docker-compose.yml`. To pull the image and start
-RStudio:
+the IDE:
 
     docker compose pull
     docker compose up
 
-If you want to build the image and start RStudio, for instance after customizing
-`Dockerfile`:
+If you want to build the image before starting the IDE, for instance after
+customizing `Dockerfile`:
 
     docker compose up --build
 
-RStudio is now available at http://localhost. On the login page, enter the
-default username (`rstudio`) and the password specified in `.env`.
+To access the IDE, open your browser and follow the instructions below.
 
-In RStudio, open the RStudio project provided by this repository by clicking on
-the button `Project: (None)` > `Open Project...` on the top-right corner, then
-select the file `nlpsandbox/nlpsandbox.Rproj`. You should now be able to open
-and run the notebook `r-and-python.Rmd`. This will confirm that you can
-successfully use R and Python togehter.
+- RStudio: Navigate to http://localhost:8787
+- Jupyter: Navigate to the link displayed in the terminal when Jupyter started.
+  You will need to replace the hostname by "localhost". E.g.
+  http://localhost:8888/lab?token=4b08e8fc4469db3b4de1bb4d0ca20ef3684e5705bd193855
 
-To stop RStudio, enter `Ctrl+C` followed by `docker compose down`.  If running
+### Stop the IDE
+
+To stop the IDE, enter `Ctrl+C` followed by `docker compose down`.  If running
 in detached mode, you will only need to enter `docker compose down`.
 
 Tips:
@@ -78,16 +95,24 @@ Tips:
 - Add `-d` or `--detach` as in `docker compose up -d` to run in the background.
 - If the command `docker compose` is missing, try `docker-compose`.
 
+## Open the RStudio project
+
+In RStudio, open the RStudio project provided by this repository by clicking on
+the button `Project: (None)` > `Open Project...` on the top-right corner, then
+select the file `nlpsandbox/nlpsandbox.Rproj`. You should now be able to open
+and run the notebook `r-and-python.Rmd`. This will confirm that you can
+successfully use R and Python togehter.
+
 ## Configuring the CI/CD workflow
 
 The [CI/CD workflow] of this repository performs the following actions:
 
-- Generate HTML notebooks from R notebook and publishes them to GitHub Pages.
+- Generate HTML notebooks from R notebooks and publishes them to GitHub Pages.
 - Build the Docker image [nlpsandbox/notebooks] and push it to Docker Hub.
 
-If you decided to fork this repository or use it as a template, you will need to
+If you decid to use this repository as a GitHub template, you will need to
 update the environment variables defined at the top of the [CI/CD workflow]. You
-also need to create the following [GitHub Secrets]:
+also need to create the following [GitHub Secrets].
 
 - `RSTUDIO_PASSWORD`: "changeme"
 - `DOCKERHUB_USERNAME`: Your Docker Hub username.
