@@ -22,12 +22,10 @@ RUN install2.r --error renv \
     && rm -rf /tmp/downloaded_packages/ /tmp/*.rds /tmp/renv.lock \
     && R -e "extrafont::font_import(prompt=FALSE)"
 
-# RUN useradd --create-home --shell /bin/bash nlp
+WORKDIR /
+COPY docker-entrypoint.sh .
+RUN chmod +x docker-entrypoint.sh
 
-# WORKDIR /
-# COPY docker-entrypoint.sh .
-# RUN chmod +x docker-entrypoint.sh
-
-# ENTRYPOINT ["/docker-entrypoint.sh"]
-# CMD ["rstudio"]
+ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["rstudio"]
 # CMD ["jupyter"]
