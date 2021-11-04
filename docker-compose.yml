@@ -10,8 +10,8 @@ services:
     environment:
       - USER=${NOTEBOOK_USER}
     container_name: nlpsandbox-notebooks
-    command: rstudio
-    # command: jupyter
+    # command: rstudio
+    command: jupyter
     volumes:
       - .:/home/${NOTEBOOK_USER}/nlpsandbox:rw
     # networks:
