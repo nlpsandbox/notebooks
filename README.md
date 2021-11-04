@@ -31,8 +31,8 @@ the image [sagebionetworks/rstudio].
 
 - Notebooks version: 0.2.0
 - NLP Sandbox schemas version: 1.2.0
-- RStudio version:
-- JupyterLab version:
+- RStudio version: 4.1.0
+- JupyterLab version: 3.2.1
 
 ## Notebooks
 
