@@ -1,4 +1,5 @@
 challengeutils==4.0.1
+jupyterlab==3.2.1
 nlpsandbox-client==4.0.0
 pandas==1.2.4
 synapseclient==2.3.1

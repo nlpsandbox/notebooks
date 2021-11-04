@@ -5,16 +5,20 @@ services:
     image: nlpsandbox/notebooks:0.1.0
     build:
       context: .
-    container_name: nlpsandbox-notebooks
-    command: rstudio
     env_file:
       - .env
+    environment:
+      - USER=${NOTEBOOK_USER}
+    container_name: nlpsandbox-notebooks
+    command: rstudio
+    # command: jupyter
     volumes:
-      - .:/home/rstudio/nlpsandbox:rw
+      - .:/home/${NOTEBOOK_USER}/nlpsandbox:rw
     # networks:
     #   - data-node
     ports:
-      - "${HOST_PORT}:8787"
+      - "8787:8787"
+      - "8888:8888"
 
 # networks:
 #   data-node:
