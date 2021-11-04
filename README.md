@@ -105,16 +105,13 @@ successfully use R and Python togehter.
 
 ## Configuring the CI/CD workflow
 
-The [CI/CD workflow] of this repository performs the following actions:
+The [CI/CD workflow] of this repository builds the Docker image
+[nlpsandbox/notebooks] and pushes it to Docker Hub.
 
-- Generate HTML notebooks from R notebooks and publishes them to GitHub Pages.
-- Build the Docker image [nlpsandbox/notebooks] and push it to Docker Hub.
-
-If you decid to use this repository as a GitHub template, you will need to
+If you decide to use this repository as a GitHub template, you will need to
 update the environment variables defined at the top of the [CI/CD workflow]. You
 also need to create the following [GitHub Secrets].
 
-- `RSTUDIO_PASSWORD`: "changeme"
 - `DOCKERHUB_USERNAME`: Your Docker Hub username.
 - `DOCKERHUB_TOKEN`: A personal access token (PAT) that has the permissions to
   push the image.
