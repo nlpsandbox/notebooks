@@ -81,9 +81,9 @@ customizing `Dockerfile`:
 To access the IDE, open your browser and follow the instructions below.
 
 - RStudio: Navigate to http://localhost:8787
-- Jupyter: Navigate to the link displayed in the terminal when Jupyter started.
-  You will need to replace the hostname by "localhost". E.g.
-  `http://localhost:8888/lab?token=4b08e8fc4469db3b4de1bb4d0ca20ef3684e5705bd193855`
+  - Authentication: see config file (`.env`)
+- Jupyter: Navigate to http://localhost:8888
+  - Authentication: use token displayed in the terminal when Jupyter started
 
 ### Stop the IDE
 
