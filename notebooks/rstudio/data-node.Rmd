@@ -1,0 +1,126 @@
+---
+title: "NLP Sandbox Data Node API"
+author: "NLP Sandbox Team"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    df_print: paged
+    code_fold: show
+    toc: yes
+    toc_float: yes
+  pdf_document:
+    toc: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+
+TBA
+
+
+
+# Setup
+
+### Data node instance
+
+This section assumes that you have access to an NLP Sandbox Data Node instance.
+Please update the data node configuration in the code block below (IP address
+and port, see section Configuration below).
+
+If you don't have access to a data node instance, follow the instruction given
+in the following GitHub repository to deploy a local instance using Docker. By
+default, the instance will be accessible from your browser at the address
+`localhost:8080`.
+
+https://github.com/nlpsandbox/data-node
+
+If you are running this notebook inside a Docker container and are running a
+data node locally, note that specifying `localhost` in the configuration below
+will refer to the local network of your RStudio container and not your computer
+local network. In order to enable this notebook to connect to your local data
+node instance, you need to given the RStudio container access to the Docker
+network of your data node instance.
+
+1. Find the name of the Docker network of your data node
+   (default: `data-node_default`).
+2. Update the content of the file `docker-compose.yml` that you use to run this
+   RStudio container to include network information as shown below.
+
+```
+version: "3.8"
+
+services:
+  rstudio:
+    image: nlpsandbox/nlpsandbox-analysis:edge
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nlpsandbox-analysis
+    command: rstudio
+    env_file:
+      - .env
+    volumes:
+      - .:/home/rstudio/nlpsandbox:rw
+    networks:
+      - data-node
+    ports:
+      - "${HOST_PORT}:8787"
+
+networks:
+  data-node:
+    external: true
+    name: data-node_default
+```
+
+3. Restart the RStudio container.
+4. This notebook should now be able to access your local data node instance at
+   the address `http://data-node:8080/api/v1` where `data-node` should be left
+   as-is (name of the data node service defined in the data node
+   `docker-compose.yml`).
+
+
+### Conda environments
+
+List the Conda environments.
+
+```{r}
+library(reticulate)
+options(reticulate.repl.quiet = TRUE)
+
+conda_list(conda = "auto")
+```
+
+Activate the environment `nlpsandbox`.
+
+```{r}
+use_condaenv("nlpsandbox", required = TRUE)
+```
+
+
+
+### Configuration
+
+```{python}
+data_node_host = "http://data-node:8080/api/v1"
+```
+
+
+
+
+# Datasets
+
+### List datasets
+
+```{python}
+from nlpsandboxclient import client
+
+datasets = client.list_datasets(host=data_node_host)
+
+for dataset in datasets:
+  print(dataset)
+
+```
+
