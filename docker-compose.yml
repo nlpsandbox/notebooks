@@ -15,13 +15,16 @@ services:
     command: ${IDE}
     volumes:
       - .:/home/${USERNAME}/nlpsandbox:rw
-    # networks:
-    #   - data-node
+    networks:
+     # - data-node
+      - nlpsandbox
     ports:
       - "${HOST_RSTUDIO_PORT}:8787"
       - "${HOST_JUPYTER_PORT}:8888"
 
-# networks:
-#   data-node:
-#     external: true
-#     name: data-node_default
+networks:
+ # data-node:
+    #external: true
+    #name: data-node_default
+  nlpsandbox:
+    name: nlpsandbox
